@@ -1,0 +1,26 @@
+PODS:
+  - Former (1.6.0)
+  - MZAppearance (1.1.6)
+  - MZFormSheetPresentationController (2.4.3):
+    - MZAppearance
+  - Realm (3.0.2):
+    - Realm/Headers (= 3.0.2)
+  - Realm/Headers (3.0.2)
+  - RealmSwift (3.0.2):
+    - Realm (= 3.0.2)
+
+DEPENDENCIES:
+  - Former
+  - MZFormSheetPresentationController
+  - RealmSwift
+
+SPEC CHECKSUMS:
+  Former: c3407c1d74f1b02014a7e8c6d7aa5bb4d1e5363b
+  MZAppearance: 0c06d3fa9cc55142f1da14bc8631fbe8fd6e19d5
+  MZFormSheetPresentationController: fbfdbad31884f16fac17fbe3c44c168306cc1095
+  Realm: 6f23fd1f178a09342eac21bfa7c2bf4312a7a180
+  RealmSwift: 695393add1b8f9d5fa75dd16e6355cf3935f71e2
+
+PODFILE CHECKSUM: b953a474cfa325e5a00472ce75d4d29efc7eb185
+
+COCOAPODS: 1.3.1
