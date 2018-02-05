@@ -65,6 +65,7 @@ class TaskTableViewController: UITableViewController {
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: true)
+		self.showSheetViewController(EditTaskViewController(self.tasks[indexPath.row]))
 	}
 	
 	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -99,7 +100,16 @@ class TaskTableViewController: UITableViewController {
 	// MARK: -
 	
 	@objc func addNewTask(gestureRecognizer: UITapGestureRecognizer) {
-		let formSheetController = MZFormSheetPresentationViewController.init(contentViewController: UINavigationController(rootViewController: NewTaskViewController()))
+		self.showSheetViewController(NewTaskViewController())
+	}
+	
+	func refresh() {
+		self.tasks = Array(TaskManager.tasks().inProgress().sorted(byKeyPath: "created", ascending: true))
+		self.tableView.reloadData()
+	}
+	
+	func showSheetViewController(_ viewController: UIViewController) {
+		let formSheetController = MZFormSheetPresentationViewController.init(contentViewController: UINavigationController(rootViewController: viewController))
 		formSheetController.contentViewCornerRadius = 15
 		formSheetController.presentationController?.movementActionWhenKeyboardAppears = .moveToTopInset
 		formSheetController.presentationController?.contentViewSize = CGSize(width: self.view.frame.width * 0.85, height: 735 / 2)
@@ -108,10 +118,5 @@ class TaskTableViewController: UITableViewController {
 		formSheetController.presentationController?.blurEffectStyle = .dark
 		formSheetController.contentViewControllerTransitionStyle = .slideFromBottom
 		self.present(formSheetController, animated: true, completion: nil)
-	}
-	
-	func refresh() {
-		self.tasks = Array(TaskManager.tasks().inProgress().sorted(byKeyPath: "created", ascending: false))
-		self.tableView.reloadData()
 	}
 }

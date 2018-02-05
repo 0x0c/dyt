@@ -12,6 +12,7 @@
 		E90507EC2026E5AA00FB7DEA /* String+FormerDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90507EA2026E5AA00FB7DEA /* String+FormerDemo.swift */; };
 		E90507F02027059300FB7DEA /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90507EF2027059300FB7DEA /* Task.swift */; };
 		E90507F22027063900FB7DEA /* TaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90507F12027063900FB7DEA /* TaskManager.swift */; };
+		E90507F42027E59F00FB7DEA /* EditTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90507F32027E59F00FB7DEA /* EditTaskViewController.swift */; };
 		E9123EC62025D79D00E3DC4E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9123EC52025D79D00E3DC4E /* AppDelegate.swift */; };
 		E9123ECD2025D79D00E3DC4E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E9123ECB2025D79D00E3DC4E /* Main.storyboard */; };
 		E9123ECF2025D79D00E3DC4E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E9123ECE2025D79D00E3DC4E /* Assets.xcassets */; };
@@ -28,6 +29,7 @@
 		E90507EA2026E5AA00FB7DEA /* String+FormerDemo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+FormerDemo.swift"; sourceTree = "<group>"; };
 		E90507EF2027059300FB7DEA /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
 		E90507F12027063900FB7DEA /* TaskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManager.swift; sourceTree = "<group>"; };
+		E90507F32027E59F00FB7DEA /* EditTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTaskViewController.swift; sourceTree = "<group>"; };
 		E9123EC22025D79D00E3DC4E /* dyt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dyt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9123EC52025D79D00E3DC4E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E9123ECC2025D79D00E3DC4E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 				E9123EC52025D79D00E3DC4E /* AppDelegate.swift */,
 				E9123ED92025D97D00E3DC4E /* TaskTableViewController.swift */,
 				E9CE47162026DFA8003187F7 /* NewTaskViewController.swift */,
+				E90507F32027E59F00FB7DEA /* EditTaskViewController.swift */,
 				E90507F12027063900FB7DEA /* TaskManager.swift */,
 				E90507E82026E5AA00FB7DEA /* Helpers */,
 				E9123EDB2025D9CA00E3DC4E /* Cell */,
@@ -284,6 +287,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E90507EC2026E5AA00FB7DEA /* String+FormerDemo.swift in Sources */,
+				E90507F42027E59F00FB7DEA /* EditTaskViewController.swift in Sources */,
 				E90507EB2026E5AA00FB7DEA /* UIColor+FormerDemo.swift in Sources */,
 				E90507F22027063900FB7DEA /* TaskManager.swift in Sources */,
 				E9123EDA2025D97D00E3DC4E /* TaskTableViewController.swift in Sources */,

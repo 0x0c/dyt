@@ -11,10 +11,18 @@ import RealmSwift
 
 @objcMembers
 class TaskManager: NSObject {
+	
 	static func addTask(_ task: Task) {
 		let realm = try! Realm()
 		try! realm.write {
 			realm.add(task)
+		}
+	}
+	
+	static func updateTask(_ handler: @escaping (() -> Void)) {
+		let realm = try! Realm()
+		try! realm.write {
+			handler()
 		}
 	}
 	
