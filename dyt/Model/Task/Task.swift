@@ -32,8 +32,8 @@ class Task: Object {
 		get {
 			return State(rawValue: self._state)!
 		}
-		set {
-			self._state = state.rawValue
+		set(s) {
+			self._state = s.rawValue
 		}
 	}
 }

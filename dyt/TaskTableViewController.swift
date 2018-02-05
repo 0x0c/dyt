@@ -72,7 +72,7 @@ class TaskTableViewController: UITableViewController {
 		let deleteAction = UIContextualAction(style: .destructive,
 											  title: "Delete",
 											  handler: { (action: UIContextualAction, view: UIView, completion: (Bool) -> Void) in
-												TaskManager.deleteTask(self.tasks[indexPath.row])
+												TaskManager.delete(self.tasks[indexPath.row])
 												self.tasks.remove(at: indexPath.row)
 												self.tableView.deleteRows(at: [indexPath], with: .left)
 												completion(true)
@@ -83,9 +83,12 @@ class TaskTableViewController: UITableViewController {
 	}
 	
 	override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-		let doneAction = UIContextualAction(style: .normal,
+		let doneAction = UIContextualAction(style: .destructive,
 												title: "Done",
 												handler: { (action: UIContextualAction, view: UIView, completion: (Bool) -> Void) in
+													TaskManager.complete(self.tasks[indexPath.row])
+													self.tasks.remove(at: indexPath.row)
+													self.tableView.deleteRows(at: [indexPath], with: .left)
 													completion(true)
 		})
 		doneAction.backgroundColor = #colorLiteral(red: 0, green: 0.4577052593, blue: 1, alpha: 1)

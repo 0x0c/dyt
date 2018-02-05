@@ -92,7 +92,7 @@ class NewTaskViewController: FormViewController {
 		}
 		else {
 			self.dismiss(animated: true) {
-				TaskManager.addTask(self.task)
+				TaskManager.add(self.task)
 				NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateTask")))
 			}
 		}

@@ -114,7 +114,7 @@ class EditTaskViewController: FormViewController {
 		}
 		else {
 			self.dismiss(animated: true) {
-				TaskManager.updateTask {
+				TaskManager.update {
 					self.task.title = self.temporallyTask.title
 					self.task.until = self.temporallyTask.until
 					self.task.note = self.temporallyTask.note

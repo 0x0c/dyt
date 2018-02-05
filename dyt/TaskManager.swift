@@ -12,21 +12,26 @@ import RealmSwift
 @objcMembers
 class TaskManager: NSObject {
 	
-	static func addTask(_ task: Task) {
+	static func add(_ task: Task) {
 		let realm = try! Realm()
 		try! realm.write {
 			realm.add(task)
 		}
 	}
 	
-	static func updateTask(_ handler: @escaping (() -> Void)) {
+	static func update(_ handler: @escaping (() -> Void)) {
 		let realm = try! Realm()
 		try! realm.write {
 			handler()
 		}
 	}
+	static func complete(_ task: Task) {
+		TaskManager.update {
+			task.state = .done
+		}
+	}
 	
-	static func deleteTask(_ task: Task) {
+	static func delete(_ task: Task) {
 		let realm = try! Realm()
 		try! realm.write {
 			realm.delete(task)
