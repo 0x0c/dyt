@@ -11,30 +11,42 @@ import RealmSwift
 
 @objcMembers
 class TaskManager: NSObject {
+	enum UpdateType : String {
+		case add = "add"
+		case update = "update"
+		case complete = "complete"
+		case delete = "delete"
+	}
 	
 	static func add(_ task: Task) {
 		let realm = try! Realm()
 		try! realm.write {
 			realm.add(task)
+			NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateTask"), object: nil, userInfo: ["updateType" : UpdateType.add]))
 		}
 	}
 	
-	static func update(_ handler: @escaping (() -> Void)) {
+	static func update(_ handler: @escaping (() -> Void), silentUpdate: Bool = false) {
 		let realm = try! Realm()
 		try! realm.write {
 			handler()
+			if silentUpdate == false {
+				NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateTask"), object: nil, userInfo: ["updateType" : UpdateType.update]))
+			}
 		}
 	}
 	static func complete(_ task: Task) {
-		TaskManager.update {
+		TaskManager.update({
 			task.state = .done
-		}
+			NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateTask"), object: nil, userInfo: ["updateType" : UpdateType.complete]))
+		}, silentUpdate: true)
 	}
 	
 	static func delete(_ task: Task) {
 		let realm = try! Realm()
 		try! realm.write {
 			realm.delete(task)
+			NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateTask"), object: nil, userInfo: ["updateType" : UpdateType.delete]))
 		}
 	}
 	
@@ -42,6 +54,7 @@ class TaskManager: NSObject {
 		let realm = try! Realm()
 		return realm.objects(Task.self)
 	}
+	
 }
 
 extension Results {

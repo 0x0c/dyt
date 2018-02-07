@@ -10,16 +10,20 @@ import UIKit
 import Former
 
 class NewTaskViewController: FormViewController {
-	let task = Task()
+	var task = Task()
 	
-	private lazy var untilRow: SelectorDatePickerRowFormer = { () -> SelectorDatePickerRowFormer<FormSelectorDatePickerCell> in
+	lazy var untilRow: SelectorDatePickerRowFormer = { () -> SelectorDatePickerRowFormer<FormSelectorDatePickerCell> in
 		let untilRow = SelectorDatePickerRowFormer<FormSelectorDatePickerCell> {
 			$0.titleLabel.text = "Until"
-			}.displayTextFromDate(String.mediumDateNoTime)
+			}.displayTextFromDate(String.mediumDateShortTime)
 			.onDateChanged { [weak self] (date) in
 				self?.task.until = date
 		}
-		untilRow.selectorView.datePickerMode = .date
+		untilRow.selectorView.datePickerMode = .dateAndTime
+		if let date = self.task.until {
+			untilRow.date = date
+			untilRow.selectorView.date = date
+		}
 		return untilRow
 	}()
 	
@@ -48,7 +52,7 @@ class NewTaskViewController: FormViewController {
 			}.onTextChanged { [weak self] (text) in
 				self?.task.title = text
 		}
-		former.append(sectionFormer: SectionFormer(rowFormer: titleRow).set(headerViewFormer: createHeader()))
+		self.former.append(sectionFormer: SectionFormer(rowFormer: titleRow).set(headerViewFormer: createHeader()))
 		
 		let moreRow = SwitchRowFormer<FormSwitchCell>() {
 			$0.titleLabel.text = "Add due date"
@@ -57,9 +61,9 @@ class NewTaskViewController: FormViewController {
 				$0.switchWhenSelected = true
 			}
 		moreRow.onSwitchChanged { [weak self] in
-			self?.switchDueDateRow($0, rowFormer: moreRow)
+			self?.switchDueDateRow($0, rowFormer: moreRow, selectRow: true)
 		}
-		former.append(sectionFormer: SectionFormer(rowFormer: moreRow).set(headerViewFormer: createHeader()))
+		self.former.append(sectionFormer: SectionFormer(rowFormer: moreRow).set(headerViewFormer: createHeader()))
 		
 		let noteRow = TextViewRowFormer<FormTextViewCell>() {
 			$0.textView.textColor = .formerSubColor()
@@ -72,17 +76,15 @@ class NewTaskViewController: FormViewController {
 					self?.task.note = note
 				}
 		}
-		former.append(sectionFormer: SectionFormer(rowFormer: noteRow).set(headerViewFormer: createHeader()))
+		self.former.append(sectionFormer: SectionFormer(rowFormer: noteRow).set(headerViewFormer: createHeader()))
     }
 	
-	override func viewDidAppear(_ animated: Bool) {
-		super.viewDidAppear(animated)
-		self.former.select(indexPath: IndexPath(row: 0, section: 0), animated: true)
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+			self.former.select(indexPath: IndexPath(row: 0, section: 0), animated: true)
+		}
 	}
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
 	
 	@objc func addTask() {
 		if self.task.title.count == 0 {
@@ -91,9 +93,10 @@ class NewTaskViewController: FormViewController {
 			self.present(alert, animated: true, completion: nil)
 		}
 		else {
-			self.dismiss(animated: true) {
-				TaskManager.add(self.task)
-				NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateTask")))
+			self.dismiss(animated: true) { [weak self] in
+				if let t = self?.task {
+					TaskManager.add(t)
+				}
 			}
 		}
 	}
@@ -102,13 +105,15 @@ class NewTaskViewController: FormViewController {
 		self.dismiss(animated: true, completion: nil)
 	}
 	
-	func switchDueDateRow(_ enabled: Bool, rowFormer: RowFormer) {
+	func switchDueDateRow(_ enabled: Bool, rowFormer: RowFormer, selectRow: Bool) {
 		if enabled {
 			self.task.until = Date()
 			self.former.insertUpdate(rowFormer: self.untilRow, below: rowFormer)
-			DispatchQueue.main.asyncAfter(deadline: .now() + 0.25, execute: {
-				self.former.select(indexPath: IndexPath(row: 1, section: 1), animated: true)
-			})
+			if selectRow {
+				DispatchQueue.main.asyncAfter(deadline: .now() + 0.25, execute: {
+					self.former.select(indexPath: IndexPath(row: 1, section: 1), animated: true)
+				})
+			}
 		}
 		else {
 			self.task.until = nil

@@ -9,18 +9,17 @@
 import UIKit
 import Former
 
-class EditTaskViewController: FormViewController {
-	var task: Task
+class EditTaskViewController: NewTaskViewController {
 	var temporallyTask = Task()
 	
-	private lazy var untilRow: SelectorDatePickerRowFormer = { () -> SelectorDatePickerRowFormer<FormSelectorDatePickerCell> in
+	override lazy var untilRow: SelectorDatePickerRowFormer = { () -> SelectorDatePickerRowFormer<FormSelectorDatePickerCell> in
 		let untilRow = SelectorDatePickerRowFormer<FormSelectorDatePickerCell> {
 			$0.titleLabel.text = "Until"
-			}.displayTextFromDate(String.mediumDateNoTime)
+			}.displayTextFromDate(String.mediumDateShortTime)
 			.onDateChanged { [weak self] (date) in
 				self?.temporallyTask.until = date
 		}
-		untilRow.selectorView.datePickerMode = .date
+		untilRow.selectorView.datePickerMode = .dateAndTime
 		if let date = self.task.until {
 			untilRow.date = date
 			untilRow.selectorView.date = date
@@ -29,11 +28,11 @@ class EditTaskViewController: FormViewController {
 	}()
 	
 	init(_ task: Task) {
+		super.init(nibName: nil, bundle: nil)
 		self.task = task
 		self.temporallyTask.title = self.task.title
 		self.temporallyTask.until = self.task.until ?? nil
 		self.temporallyTask.note = self.task.note
-		super.init(nibName: nil, bundle: nil)
 	}
 	
 	required init?(coder aDecoder: NSCoder) {
@@ -57,6 +56,7 @@ class EditTaskViewController: FormViewController {
 			}
 		}
 		
+		self.former.removeAll()
 		let titleRow = TextFieldRowFormer<FormTextFieldCell>() {
 			$0.textField.textColor = .formerColor()
 			$0.textField.font = .systemFont(ofSize: 18)
@@ -66,7 +66,7 @@ class EditTaskViewController: FormViewController {
 			}.onTextChanged { [weak self] (text) in
 				self?.temporallyTask.title = text
 		}
-		former.append(sectionFormer: SectionFormer(rowFormer: titleRow).set(headerViewFormer: createHeader()))
+		self.former.append(sectionFormer: SectionFormer(rowFormer: titleRow).set(headerViewFormer: createHeader()))
 		
 		let moreRow = SwitchRowFormer<FormSwitchCell>() {
 			$0.titleLabel.text = "Add due date"
@@ -84,7 +84,7 @@ class EditTaskViewController: FormViewController {
 		if self.task.until != nil {
 			rows.append(self.untilRow)
 		}
-		former.append(sectionFormer: SectionFormer(rowFormers: rows).set(headerViewFormer: createHeader()))
+		self.former.append(sectionFormer: SectionFormer(rowFormers: rows).set(headerViewFormer: createHeader()))
 		
 		let noteRow = TextViewRowFormer<FormTextViewCell>() {
 			$0.textView.textColor = .formerSubColor()
@@ -98,7 +98,7 @@ class EditTaskViewController: FormViewController {
 					self?.temporallyTask.note = note
 				}
 		}
-		former.append(sectionFormer: SectionFormer(rowFormer: noteRow).set(headerViewFormer: createHeader()))
+		self.former.append(sectionFormer: SectionFormer(rowFormer: noteRow).set(headerViewFormer: createHeader()))
 	}
 	
 	override func didReceiveMemoryWarning() {
@@ -114,21 +114,16 @@ class EditTaskViewController: FormViewController {
 		}
 		else {
 			self.dismiss(animated: true) {
-				TaskManager.update {
+				TaskManager.update({
 					self.task.title = self.temporallyTask.title
 					self.task.until = self.temporallyTask.until
 					self.task.note = self.temporallyTask.note
-				}
-				NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateTask")))
+				})
 			}
 		}
 	}
 	
-	@objc func cancel() {
-		self.dismiss(animated: true, completion: nil)
-	}
-	
-	func switchDueDateRow(_ enabled: Bool, rowFormer: RowFormer, selectRow: Bool) {
+	override func switchDueDateRow(_ enabled: Bool, rowFormer: RowFormer, selectRow: Bool) {
 		if enabled {
 			if self.temporallyTask.until == nil {
 				self.temporallyTask.until = Date()

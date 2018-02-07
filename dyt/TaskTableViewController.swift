@@ -24,8 +24,12 @@ class TaskTableViewController: UITableViewController {
 		self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 100, 0)
 		self.tableView.separatorStyle = .none
 		
-		NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "UpdateTask"), object: nil, queue: OperationQueue.main) { (_) in
-			self.refresh()
+		NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "UpdateTask"), object: nil, queue: OperationQueue.main) { (noti) in
+			guard let userInfo = noti.userInfo else { return }
+			let t = userInfo["updateType"] as! TaskManager.UpdateType
+			if t == .add || t == .update {
+				self.refresh()
+			}
 		}
     }
 	
@@ -54,7 +58,16 @@ class TaskTableViewController: UITableViewController {
 		cell.taskLabel.text = t.title
 		if let date = t.until {
 			cell.dateLabel.isHidden = false
-			cell.dateLabel.text = String.mediumDateNoTime(date: date)
+			cell.dateLabel.text = "Until \(String.mediumDateShortTime(date: date))"
+			if Calendar.current.isDateInToday(date) {
+				cell.dateLabel.textColor = #colorLiteral(red: 0, green: 0.4577052593, blue: 1, alpha: 1)
+			}
+			else if date < Date() {
+				cell.dateLabel.textColor = #colorLiteral(red: 1, green: 0.2352941176, blue: 0.1882352941, alpha: 1)
+			}
+			else if date > Date() {
+				cell.dateLabel.textColor = UIColor.black
+			}
 		}
 		else {
 			cell.dateLabel.isHidden = true
